@@ -14,3 +14,11 @@ class Playlist:
       self.imageUrl = json['images'][0]['url']
     if json['owner'] != None:
     	self.ownerID = json['owner']['id']
+
+  def toSQLInsert(self, extra_fields = {}):
+    keys = ",".join(extra_fields.keys())
+    columns = "(ID,href,name,imageURL,ownerID,"+keys+")"
+    values = (self.id,self.href,self.name,self.imageUrl,self.ownerID)
+    for x in extra_fields:
+      values = values + (extra_fields[x],)
+    return columns, values

@@ -22,6 +22,14 @@ class Track:
       self.artistId = json['artists'][0]['id']
       self.artistName = json['artists'][0]['name']
 
+  def toSQLInsert(self, extra_fields = {}):
+    keys = ",".join(extra_fields.keys())
+    columns = "(ID,href,name,playbackURL,popularity,albumName,albumImageURL,artistID,artistName,"+keys+")"
+    values = (self.id,self.href,self.name,str(self.playbackURL),str(self.popularity),self.albumName,self.albumImageURL, self.artistId, self.artistName) #"('"+self.id+"','"+self.href+"','"+self.name+"','"+str(self.playbackURL)+"',"+str(self.popularity)+",'"+self.albumName+"','"+self.albumImageURL+"','"+self.artistId+"','"+self.artistName+"', "+valuesextra+")"
+    for x in extra_fields:
+      values = values + (extra_fields[x],)
+    
+    return columns, values
 
 
 

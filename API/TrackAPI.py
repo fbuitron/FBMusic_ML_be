@@ -20,7 +20,6 @@ class TrackAPI():
             list_of_items = json_obj['items']
             for item_index in range(len(list_of_items)):
                 track_json = json_obj['items'][item_index]['track']
-                print(track_json)
                 t = Track.Track(track_json)
                 self.list_of_tracks.append(t)
             self.stillPaging = False
@@ -35,7 +34,6 @@ class TrackAPI():
             i = 0
             while(self.stillPaging):
                 get = Networking.NetworkGET(self.base_url, self.endpoint)
-                Security.renew_access_token()
                 token = Security.get_Authorization_Header()
                 print("Token " + token)
                 params = {"access_token": token}

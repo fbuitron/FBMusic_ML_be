@@ -1,1 +1,0 @@
-# This object will be in charge of interacting with the API, and storing the objects into the database.
