@@ -18,7 +18,6 @@ class CategoriesAPI():
             list_of_items = json_obj['categories']['items']
             for item_index in range(len(list_of_items)):
                 category_json = json_obj['categories']['items'][item_index]
-                print(category_json)
                 c = Category.Category(category_json)
                 self.list_of_categories.append(c)
             self.stillPaging = False
@@ -31,10 +30,8 @@ class CategoriesAPI():
             self.stillPaging = True
             i = 0
             while(self.stillPaging):
-                get = Networking.NetworkGET(self.base_url, self.endpoint)
-                Security.renew_access_token()
+                get = Networking.NetworkGET(self.base_url, self.endpoint)                
                 token = Security.get_Authorization_Header()
-                print("Token " + token)
                 params = {"access_token": token}
                 get.get(success, failure, params)
 
