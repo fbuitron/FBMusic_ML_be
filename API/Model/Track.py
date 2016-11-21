@@ -13,14 +13,19 @@ class Track:
     self.playbackURL = json['preview_url']
     self.popularity = json['popularity']
     if json['album'] != None:
-
-    	self.albumName = json['album']['name']							
-    	if len(json['album']['images']) > 0:
-    		self.albumImageURL = json['album']['images'][0]['url']
-    
+      self.albumName = json['album']['name']							
+      if len(json['album']['images']) > 0:
+        self.albumImageURL = json['album']['images'][0]['url']
+      else:
+        self.albumImageURL = ""
+    else:
+      self.albumName = ""
     if len(json['artists']) > 0:
       self.artistId = json['artists'][0]['id']
       self.artistName = json['artists'][0]['name']
+    else:
+      self.artistId = ""
+      self.artistName = ""
 
   def toSQLInsert(self, extra_fields = {}):
     keys = ",".join(extra_fields.keys())
