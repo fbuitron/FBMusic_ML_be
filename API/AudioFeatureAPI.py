@@ -1,12 +1,11 @@
 from Networking import Networking
 from Model import AudioFeatures
+from SpotifyAPI import SpotifyAPI
 import Security
 import json
 
 
-class AudioFeatureAPI():
-    endpoint = "/v1/audio-features"
-    base_url = "https://api.spotify.com"
+class AudioFeatureAPI(SpotifyAPI):
 
     def __init__(self, tracksIds):
         self.dict_audio_features = {}
@@ -22,25 +21,21 @@ class AudioFeatureAPI():
                 af = AudioFeatures.AudioFeatures(audio_features_json)
                 trackID = audio_features_json['id']
                 self.dict_audio_features[trackID] = af
-            self.stillPaging = False
-        def failure(error):
-        	print(error.content)
-        	self.stillPaging = False
-
-        print(self.endpoint)
-        if self.hasPaging():
-            self.stillPaging = True
-            i = 0
-            while(self.stillPaging):
-                get = Networking.NetworkGET(self.base_url, self.endpoint)
-                token = Security.get_Authorization_Header()
-                trackIDs_param = ",".join(self.tracksIds)
-                params = {"access_token": token, "ids": trackIDs_param}
-                get.get(success, failure, params)
+    
+        get = Networking.NetworkGET(self.base_url, self.getEndpoint())
+        token = Security.get_Authorization_Header()
+        trackIDs_param = ",".join(self.tracksIds)
+        params = self.getParameters()
+        params["ids"] = trackIDs_param
+        get.get(success, self.failure, params)
 
     def hasPaging(self):
-        return True
+        return False
+    
+    def getEndpoint(self):
+        return "/v1/audio-features"
 
-
+    def getRootElement(self):
+        return ""
 
 
