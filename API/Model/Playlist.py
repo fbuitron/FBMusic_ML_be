@@ -12,6 +12,8 @@ class Playlist:
     self.name = json['name']
     if len(json['images']) > 0:
       self.imageUrl = json['images'][0]['url']
+    else:
+      self.imageUrl = ""
     if json['owner'] != None:
     	self.ownerID = json['owner']['id']
 

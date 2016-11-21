@@ -6,105 +6,190 @@ from AudioFeatureAPI import AudioFeatureAPI
 import Security
 import MySQLdb
 
-
-# def testSQL():
-# 	db = MySQLdb.connect(host="localhost",    # your host, usually localhost
-# 	                     user="root",         # your username
-# 	                     passwd="root",  # your password
-# 	                     db="test_py")        # name of the data base
-
-# 	# # you must create a Cursor object. It will let
-# 	# #  you execute all the queries you need
-# 	cur = db.cursor()
-
-# 	# INSERT INTO Track (ID,href,name,playbackURL,popularity,albumName,albumImageURL,artistID,artistName,playlistID) VALUES (?,?,?,?,?,?,?,?,?) ('1mLBSbBqgwg1EIO7h52sdZ', 'https://api.spotify.com/v1/tracks/1mLBSbBqgwg1EIO7h52sdZ', "I'd Rather Go Blind", 'https://p.scdn.co/mp3-preview/bf8550dffd3b09a734580e1ec8b615796ed124eb', '23', '2am Rough Tracks', 'https://i.scdn.co/image/7ce5720197da73267736232a8f52ae191e08adc9', '022EiWsch2zvty0qBUksDO', 'Liam Bailey')
-# 	# # Use all the SQL you like
-# 	# INSERT INTO Track (ID,href,name,playbackURL,popularity,albumName,albumImageURL,artistID,artistName,playlistID) VALUES (?,?,?,?,?,?,?,?,?,?) ('1mLBSbBqgwg1EIO7h52sdZ', 'https://api.spotify.com/v1/tracks/1mLBSbBqgwg1EIO7h52sdZ', "I'd Rather Go Blind", 'https://p.scdn.co/mp3-preview/bf8550dffd3b09a734580e1ec8b615796ed124eb', '23', '2am Rough Tracks', 'https://i.scdn.co/image/7ce5720197da73267736232a8f52ae191e08adc9', '022EiWsch2zvty0qBUksDO', 'Liam Bailey', '2XYm3JdmAKSWRsj75YRLBV')
-
-# 	# INSERT INTO AudioFeatures (acousticness,danceability,duration_ms,energy,instrumentalness,key,liveness,loudness,mode,speechiness,tempo,time_signature,valence,trackID) VALUES (0.205, 0.51, 221280, 0.688, 0, 7, 0.16, -5.952, 1, 0.0322, 129.795, 4, 0.438, '3LcrBMmEejUO09Lrmyixzb')
-
-# 	# INSERT INTO Category (ID,href,name,imageURL) VALUES (%s,%s,%s,%s) 
-# 	# INSERT INTO Category (ID,href,name,imageURL) VALUES (%s,%s,%s,%s) ", ('travel', 'https://api.spotify.com/v1/browse/categories/travel', 'Travel', 'https://t.scdn.co/media/derived/travel-274x274_1e89cd5b42cf8bd2ff8fc4fb26f2e955_0_0_274_274.jpg')
-# 	#INSERT INTO Playlist (ID,href,name,imageURL,ownerID,categoryID) VALUES (%s,%s,%s,%s,%s,%s) ('6a3N3HKBQdxIScNB3MsOtg', 'https://api.spotify.com/v1/users/spotify/playlists/6a3N3HKBQdxIScNB3MsOtg', 'Commute Pump Up', 'https://u.scdn.co/images/pl/default/38eb1fa0004cd7116a2ab10f9e5037876b89bae3', 'spotify', 'travel')
-# 	# cur.execute("INSERT INTO Category (ID,href,name,imageURL) VALUES (%s,%s,%s,%s) ", ('travel', 'https://api.spotify.com/v1/browse/categories/travel', 'Travel', 'https://t.scdn.co/media/derived/travel-274x274_1e89cd5b42cf8bd2ff8fc4fb26f2e955_0_0_274_274.jpg'))
-# 	#cur.execute("INSERT INTO Playlist (ID,href,name,imageURL,ownerID,categoryID) VALUES (%s,%s,%s,%s,%s,%s)",('6a3N3HKBQdxIScNB3MsOtg', 'https://api.spotify.com/v1/users/spotify/playlists/6a3N3HKBQdxIScNB3MsOtg', 'Commute Pump Up', 'https://u.scdn.co/images/pl/default/38eb1fa0004cd7116a2ab10f9e5037876b89bae3', 'spotify', 'travel'))
-	
-# 	# INSERT INTO Track (ID,href,name,playbackURL,popularity,albumName,albumImageURL,artistID,artistName,playlistID) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ('7267sjVo1XgIcKrHsoCjkC', 'https://api.spotify.com/v1/tracks/7267sjVo1XgIcKrHsoCjkC', 'Fort Knox [2012 Edit]', 'None', '0', 'Goldfish', 'https://i.scdn.co/image/0b16593d4043f3ba84f76a962e3e110e366ac3b6', '0uRdK8gy7fXJGRywrlmPM7', 'GoldFish', '6a3N3HKBQdxIScNB3MsOtg')
-# 	# cur.execute("INSERT INTO Track (ID,href,name,playbackURL,popularity,albumName,albumImageURL,artistID,artistName,playlistID) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",('7267sjVo1XgIcKrHsoCjkC', 'https://api.spotify.com/v1/tracks/7267sjVo1XgIcKrHsoCjkC', 'Fort Knox [2012 Edit]', 'None', '0', 'Goldfish', 'https://i.scdn.co/image/0b16593d4043f3ba84f76a962e3e110e366ac3b6', '0uRdK8gy7fXJGRywrlmPM7', 'GoldFish', '6a3N3HKBQdxIScNB3MsOtg'))
-# 	# cur.execute("INSERT INTO Track (ID,href,name,playbackURL,popularity,albumName,albumImageURL,artistID,artistName,playlistID) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",('7267sjVo1XgIcKrHsoCjkC', 'https://api.spotify.com/v1/tracks/7267sjVo1XgIcKrHsoCjkC', 'Fort Knox [2012 Edit]', 'None', '0', 'Goldfish', 'https://i.scdn.co/image/0b16593d4043f3ba84f76a962e3e110e366ac3b6', '0uRdK8gy7fXJGRywrlmPM7', 'GoldFish', '6a3N3HKBQdxIScNB3MsOtg'))
-# 	# # print all the first cell of all the rows
-# 	# for row in cur.fetchall():
-# 	#     print(row[0])
-
-# 	# INSERT INTO AudioFeatures (acousticness,danceability,duration_ms,energy,instrumentalness,a_key,liveness,loudness,a_mode,speechiness,tempo,time_signature,valence,trackID) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) (0.0571, 0.694, 189767, 0.676, 0, 1, 0.306, -7.627, 1, 0.187, 121.136, 4, 0.621, '7267sjVo1XgIcKrHsoCjkC')
-# 	# cur.execute("SELECT * FROM tbl_user WHERE user_id > 2")
-# 	cur.execute("INSERT INTO AudioFeatures (acousticness,danceability,duration_ms,energy,instrumentalness,a_key,liveness,loudness,a_mode,speechiness,tempo,time_signature,valence,trackID) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",(0.0571, 0.694, 189767, 0.676, 0, 1, 0.306, -7.627, 1, 0.187, 121.136, 4, 0.621, '7267sjVo1XgIcKrHsoCjkC'))
-# 	# print("Second one!!!")
-# 	# # print all the first cell of all the rows
-# 	# for row in cur.fetchall():
-# 	#     print(row[0])
-# 	db.commit()
-# 	db.close()
-
 def generateInsertQuery(tablename, columns, values):
 	sqlClause = "INSERT INTO "+tablename+" "+columns+" VALUES "
 	params = "("+",".join(["%s" for x in values])+")"
 	sqlClause += params
 	return sqlClause, values
 
-
 def loadCategories():
-	def saveCategories(listOfCategories):
+	def getQueries(listOfCategories):
+		statements = []
 		for c in listOfCategories:
 			col,values = c.toSQLInsert()
 			sqlQuery, val = generateInsertQuery('Category',col,values)
-			print(sqlQuery,val)
+			statements.append((sqlQuery,val))
+		return statements
 
 	cAPI = CategoriesAPI()
 	cAPI.getCategories()
 	listOfCategories = cAPI.list_of_categories
-	print(len(listOfCategories))
-	saveCategories(listOfCategories)
+	return getQueries(listOfCategories)
 
 def loadPlaylist(categoryID):
 	def savePlaylist(listOfPlaylist, categoryID):
+		statements = []
 		param = {"categoryID":categoryID}
 		for p in listOfPlaylist:
 			col,values = p.toSQLInsert(param)
 			sqlQuery, values = generateInsertQuery('Playlist',col,values)
-			print(sqlQuery, values)
+			statements.append((sqlQuery, values))
+		return statements
 			
 
 	pAPI = PlaylistAPI(categoryID)
 	pAPI.getPlaylists()
 	listOfPlaylist = pAPI.list_of_playlist
-	print(len(listOfPlaylist))
-	savePlaylist(listOfPlaylist,categoryID)
+	return savePlaylist(listOfPlaylist,categoryID)
 
 def loadTracks(userID, playlistID):
 	def saveTracks(listOfTracks, playlistID):
 		param = {"playlistID":playlistID}
+		statements = []
 		for p in listOfTracks:
 			col,values = p.toSQLInsert(param)
 			sqlQuery, val = generateInsertQuery('Track',col,values)
-			print(sqlQuery, values)
+			statements.append((sqlQuery, values))
+		return statements
 
 	tAPI = TrackAPI(userID, playlistID)
 	tAPI.getTracks()
 	listOfTracks = tAPI.list_of_tracks
-	print(len(listOfTracks))
-	saveTracks(listOfTracks,playlistID)
+	return saveTracks(listOfTracks,playlistID)
 
 def loadAudioFeatures(tracksIds):
 	def saveAudioFeatures(dictOfAudioFeatures):
+		statements = []
 		for afkey in dictOfAudioFeatures:
 			param = {"trackID":afkey}
 			col,values = dictOfAudioFeatures[afkey].toSQLInsert(param)
 			sqlQuery, val = generateInsertQuery('AudioFeatures',col,values)
-			print(sqlQuery, values)
+			statements.append((sqlQuery, values))
+		return statements
 
 	afAPI = AudioFeatureAPI(tracksIds)
 	afAPI.getAudioFeatures()
 	dictOfAudioFeatures = afAPI.dict_audio_features
-	print(len(dictOfAudioFeatures))
-	saveAudioFeatures(dictOfAudioFeatures)
+	return saveAudioFeatures(dictOfAudioFeatures)
+
+
+def getDBConnection():
+	db = MySQLdb.connect(host="localhost",    # your host, usually localhost
+	                     user="root",         # your username
+	                     passwd="root",  # your password
+	                     db="test_py",
+	                     charset='utf8')        # name of the data base
+	return db
+
+def storeCategories():
+
+	#TODO: Query the cat table if it is empty, load it, else nothing
+	sql_queries = loadCategories()
+	conn = getDBConnection()
+	cursor = conn.cursor()
+	print("Adding ",len(sql_queries), " categories")
+	for query in sql_queries:
+		insert_st = query[0]
+		values_st = query[1]
+		cursor.execute(insert_st,values_st)		
+	conn.commit()
+	conn.close()
+
+# 
+
+# TODO: I am hardcoding the list of Categories that we are actually gonna load. This should be better modeled into the db or sth.
+categories_used = ["pop","blues","country","hiphop","metal","jazz","punk","reggae","rnb","rock","classical"] #"romance" "soul"
+
+def storePlaylists(categ = []):
+	conn = getDBConnection()
+	cursor = conn.cursor()
+	for cat in categ:
+		sql_queries = loadPlaylist(cat)
+		print("Adding ",len(sql_queries)," playlists to ",cat)
+		for query in sql_queries:
+			insert_st = query[0]
+			values_st = query[1]
+			try:
+				cursor.execute(insert_st,values_st)
+			except (MySQLdb.Error) as e:
+				print(e)
+				# print("Trying to executy this query ", insert_st, " -> ",values_st)
+			
+			conn.commit()
+	
+	conn.close()
+
+def storeTracks():
+	conn = getDBConnection()
+	cursor = conn.cursor()
+	cursor.execute("SELECT c.ID from Category c")
+	catResults = cursor.fetchall()
+
+	for cate in catResults:
+		catID = cate[0]
+		cursor.execute("SELECT p.ID, p.ownerId from Playlist p INNER JOIN Category c ON p.categoryID = c.ID WHERE c.ID = %s",(catID,))
+		results = cursor.fetchall()
+		countOfSongs = 0
+		print("Processing Category: ",catID)
+		for result in results:
+			playlistID = result[0]
+			ownerID = result[1]
+			sqlqueries = loadTracks(ownerID,playlistID)		
+			
+			if countOfSongs < 100:
+				print("Adding ",len(sqlqueries)," tracks")
+				for query in sqlqueries:
+					insert_st = query[0]
+					values_st = query[1]
+					try:
+						cursor.execute(insert_st,values_st)
+						countOfSongs += 1
+					except (MySQLdb.Error) as e:
+						print(e)
+
+					conn.commit()
+
+	conn.close()
+
+store_audio_page_size = 99
+def storeAudioFeatures():
+	conn = getDBConnection()
+	cursor = conn.cursor()
+	cursor.execute("SELECT t.ID from Track t")
+	tracks = cursor.fetchall()
+	numberOfTracks = len(tracks)
+	tracksProcessed = 0
+	print("Going to process ",numberOfTracks,"number of tracks")
+	while (tracksProcessed < numberOfTracks):
+		toProcess = numberOfTracks - tracksProcessed
+		amount = store_audio_page_size
+		if (toProcess < store_audio_page_size):
+			amount = toProcess
+		trackList = []
+		freezeTracksProcessed = tracksProcessed
+		print("Processing songs from:",freezeTracksProcessed," to  ",freezeTracksProcessed + amount)
+		for index in range(freezeTracksProcessed, tracksProcessed + amount):
+			track = tracks[index]
+			trackList.append(track[0])
+			tracksProcessed += 1
+		sqlqueries = loadAudioFeatures(trackList)
+		for query in sqlqueries:
+			insert_st = query[0]
+			values_st = query[1]
+			try:
+				cursor.execute(insert_st,values_st)
+			except (MySQLdb.Error) as e:
+				print(e)
+
+			conn.commit()
+
+
+# Security.renew_access_token()	
+
+storeCategories()
+storePlaylists(categories_used)
+storeTracks()
+storeAudioFeatures()
+
+
+	
