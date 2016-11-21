@@ -24,7 +24,6 @@ def loadCategories():
 	cAPI = CategoriesAPI()
 	cAPI.getCategories()
 	listOfCategories = cAPI.list_of_categories
-	print(len(listOfCategories))
 	return getQueries(listOfCategories)
 
 def loadPlaylist(categoryID):
@@ -170,7 +169,6 @@ def storeAudioFeatures():
 		freezeTracksProcessed = tracksProcessed
 		print("Processing songs from:",freezeTracksProcessed," to  ",freezeTracksProcessed + amount)
 		for index in range(freezeTracksProcessed, tracksProcessed + amount):
-			# print("Index ",index," tracksProcessed: ", tracksProcessed, " amount ", amount, " tracks: ",len(tracks), "freese ",freezeTracksProcessed," tope ",freezeTracksProcessed+index)
 			track = tracks[index]
 			trackList.append(track[0])
 			tracksProcessed += 1
@@ -186,7 +184,7 @@ def storeAudioFeatures():
 			conn.commit()
 
 
-# Security.renew_access_token()
+# Security.renew_access_token()	
 
 storeCategories()
 storePlaylists(categories_used)
