@@ -1,19 +1,19 @@
 from sklearn.cluster import KMeans
 import numpy as np
 import pandas as pd
-import Preprocessing as pre
+from . import Preprocessing
+# import Preprocessing as Preprocessing
 from sklearn.metrics import completeness_score, homogeneity_score
 from sklearn.decomposition import PCA
+import MySQLdb
 
 def cluster():
-	dataSet = pre.getDataFromCSV()
+	dataSet = Preprocessing.getDataFromCSV()
 	data_ = dataSet.iloc[:,1:-1]
 	labels_ = dataSet.iloc[:,-1]
 	ids_ = dataSet.iloc[:,0]
-	norm_data = pre.completePreprocessing(data_,data_)
+	norm_data = Preprocessing.completePreprocessing(data_,data_)
 	kmeans = KMeans(n_clusters=11).fit(norm_data)
-	print(kmeans.labels_[:250])
-	print("sklearn clustering scores!!!")
 	scoreClusters(kmeans.labels_, labels_)
 
 def myCluster(data_, labels_):
@@ -50,15 +50,14 @@ def scoreClusters(predicted_clusters, labels_):
 	true_classes = labels_.ix[labels_IX]
 	true_classes_array = np.squeeze(np.asarray(true_classes))
 	
-	print(completeness_score(true_classes_array,predicted_clusters))
-	print(homogeneity_score(true_classes_array,predicted_clusters))
+	return completeness_score(true_classes_array,predicted_clusters), homogeneity_score(true_classes_array,predicted_clusters)
 
 def performPCA():
-	dataSet = pre.getDataFromCSV()
+	dataSet = Preprocessing.getDataFromCSV()
 	data_ = dataSet.iloc[:,1:-1]
 	labels_ = dataSet.iloc[:,-1]
 	ids_ = dataSet.iloc[:,0]
-	norm_data = pre.completePreprocessing(data_,data_)
+	norm_data = Preprocessing.completePreprocessing(data_,data_)
 	pca = PCA(n_components=5)
 	pca_tracks = pca.fit(norm_data)
 	pca_tracks_data = pca.transform(norm_data)
@@ -115,6 +114,79 @@ def kMeans(dataSet, k, distMeas, createCent=randCent):
                 centroids[cent,:] = np.mean(ptsInClust, axis=0) #assign centroid to mean - Note condition was added 10/28/2013
     return centroids, clusterAssment
 
+def cluster_Kmeans(k):
+	dataSet = Preprocessing.getDataFromCSV()
+	data_ = dataSet.iloc[:,1:-1]
+	labels_ = dataSet.iloc[:,-1]
+	ids_ = dataSet.iloc[:,0]
+	norm_data = Preprocessing.completePreprocessing(data_,data_)
+	kmeans = KMeans(n_clusters=k).fit(norm_data)
+	cm,hm = scoreClusters(kmeans.labels_, labels_)
+	jsonResponse = {}
+	jsonListOfClusters = get_song_clusters(k, kmeans.labels_, ids_)
+	jsonResponse["homgenity"] = hm
+	jsonResponse["completeness"] = cm
+	jsonResponse["listOfClusters"] = jsonListOfClusters
+	return jsonResponse
+	
+
+def getDBConnection():
+	db = MySQLdb.connect(host="localhost",    # your host, usually localhost
+	                     user="root",         # your username
+	                     passwd="root",  # your password
+	                     db="test_py",
+	                     charset='utf8')        # name of the data base
+	return db
+
+
+def get_song_clusters(k,labels_Assignments, ids_):
+	print(labels_Assignments.shape)	
+	print(ids_.shape)
+	jsonClusterList = []
+	for clus_num in range(k):
+		jsonClusterDict = {}
+		clu_tracks = np.array(ids_)[labels_Assignments==clus_num]
+		number_of_tracks = clu_tracks.shape[0]
+		print("Cluster ",clus_num+1," has ",number_of_tracks," tracks \n")
+		jsonClusterDict["clusterId"] = clus_num+1
+		jsonClusterDict["numberOfTracks"] = number_of_tracks
+		limit = 5
+		if number_of_tracks == 0:
+			continue
+		if number_of_tracks < 5:
+			limit = number_of_tracks
+		# indices = np.indices(clu_tracks)
+		conditions = "("
+		ind = 0
+		for top_tracks in range(limit):
+			top_track = clu_tracks[top_tracks]
+			if ind == 0:
+				conditions += "'"+top_track+"'"
+			else:
+				conditions += ",'"+top_track+"'"
+			ind +=1 
+		conditions +=")"
+		print(conditions)
+		con = getDBConnection()
+		curs = con.cursor()
+		curs.execute("SELECT t.ID as id, t.name as name, t.playbackURL as url FROM Track t WHERE t.ID in "+conditions)
+		listOfTracks = curs.fetchall()
+		jsonListOfTracks = []
+		for numTra in range(len(listOfTracks)):
+			track = {}
+			track["id"] = listOfTracks[numTra][0]
+			track["name"] = listOfTracks[numTra][1]
+			track["url"] = listOfTracks[numTra][2]
+			print(track["name"])
+			print(track["url"])
+			jsonListOfTracks.append(track)
+			# print("%2s %15s" % (top_tracks+1, top_track))
+			# print("---------------------------------------------------------")
+		jsonClusterDict["top5"] = jsonListOfTracks
+		jsonClusterList.append(jsonClusterDict)
+	return jsonClusterList
+
+# print(cluster_Kmeans(3))
 # cluster()
 # print("My Cluster")
 # myCluster()

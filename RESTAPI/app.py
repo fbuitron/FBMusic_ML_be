@@ -1,5 +1,15 @@
 from flask import Flask
+from flask import render_template
 from flaskext.mysql import MySQL
+from MachineLearning import Classification
+from MachineLearning import Clustering
+from MachineLearning import Preprocessing
+from flask import request
+from flask import jsonify
+from SearchAPI import SearchAPI
+from AudioFeatureAPI import AudioFeatureAPI
+import numpy as np
+import json
 
 app = Flask(__name__)
 mysql = MySQL()
@@ -13,20 +23,53 @@ mysql.init_app(app)
 
 @app.route("/")
 def main():
-    return "Welcome!"
+    return render_template('index.html')
 
-@app.route("/user", methods=['GET'])
-def user():
-    cursor = mysql.connect().cursor()
-    cursor.execute("SELECT * FROM tbl_user")
-    rv = cursor.fetchall()
-    print(rv)
-    return str(rv)
+@app.route("/classify/knn", methods=['GET'])
+def knn():
+	k = request.args.get('k')
+	print("The value of K ",k)
+	accuracy = Classification.classify_KNN(int(k))
+	return accuracy
 
+@app.route("/classify/tree", methods=['GET'])
+def tree():
+	accuracy = Classification.classify_Tree()
+	return accuracy
+
+@app.route("/classify/song", methods=['GET'])
+def classifySong():
+	songId = request.args.get('songId')
+	audFeat = AudioFeatureAPI([songId])
+	audFeat.getAudioFeatures()
+	dictAudFeature = audFeat.dict_audio_features
+	
+	af = dictAudFeature[songId]
+	af_arr = np.array([af.acousticness,af.danceability, af.duration_ms, af.energy, af.instrumentalness, af.key, af.liveness, af.loudness, af.mode, af.speechiness, af.tempo, af.time_signature, af.valence])
+	cate = Classification.classify_song_tree(af_arr)
+	return cate
+
+@app.route("/cluster/knnMeans", methods=['GET'])
+def knnMeans():
+	k = request.args.get('k')
+	print("KMeans: ",k)
+	jsonResponse = Clustering.cluster_Kmeans(int(k))
+	return jsonify(**jsonResponse)
+
+@app.route("/search/track", methods=['GET'])
+def searchTrack():
+	q = request.args.get('q')
+	print("query: ",q)
+	est = SearchAPI()
+	est.getSearch(q)
+	listOfSongs = est.result_list
+	return jsonify(listOfSongs)
+
+@app.route("/data/describe", methods=['GET'])
+def dataDescribe():
+	listResponse = Preprocessing.getDataFeatures()
+	return jsonify(**listResponse)	
 
 if __name__ == "__main__":
     app.run()
-
-
-    
 
