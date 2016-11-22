@@ -82,6 +82,6 @@ def sep_train_test(dataSet, percent_test_cases=0.20):
 
 	return train_data, train_labels, train_ids, test_data, test_labels, test_ids
 
-# startClassifyKNN()
-# startClassifyTree()
+startClassifyKNN()
+startClassifyTree()
 test()
