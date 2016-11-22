@@ -38,24 +38,39 @@ def writeCSV(listResults, filePath, titles=[]):
 titles = ['trackID', 'acousticness', 'danceability', 'duration_ms', 'energy', 'instrumentalness', 'a_key', 'liveness', 'loudness', 'a_mode', 'speechiness', 'tempo', 'time_signature', 'valence', 'category']
 # listResults = getRawData()
 # writeCSV(listResults, 'songs.csv', titles)
+
 def splitData():
-	df = pd.read_csv("songs.csv")
+	df = getDataFromCSV()
 	categories = df.category
 	trackIds = df.trackID
 	dataSet = df.ix[:,1:-1]
 	return dataSet, trackIds, categories
 
-def preprocess(dataSet):
+def getDataFromCSV():
+	df = pd.read_csv("songs.csv", header=0, index_col=None)
+	return df
+
+def categorical_preprocess(dataSet):
 	# Key and Mode are the only data points that need to be treated differently in the preprocessing
 	df_dum = pd.get_dummies(dataSet,columns=['a_key', 'a_mode'])	
 	np_arr = np.array(df_dum)
+	return np_arr
+
+def normalize_preprocess(dataSet, targetDataSet):
 	min_max_scaler = preprocessing.MinMaxScaler()
-	normalized_data = min_max_scaler.fit_transform(np_arr)
-	print(normalized_data)
+	min_max_scaler.fit(dataSet)
+	normalized_data = min_max_scaler.transform(targetDataSet)
 	return normalized_data
 
+def completePreprocessing(dataSet, targetDataSet):
+	cat_process = categorical_preprocess(dataSet)
+	cat_target = categorical_preprocess(targetDataSet)
+	normal_data = normalize_preprocess(cat_process, cat_target)
+	return normal_data
+
 dataSet,trackIds,categories = splitData()
-preprocess(dataSet)
+cat_process = categorical_preprocess(dataSet)
+normal_data = normalize_preprocess(cat_process, cat_process)
 
 
 
