@@ -68,6 +68,7 @@ def completePreprocessing(dataSet, targetDataSet):
 	normal_data = normalize_preprocess(cat_process, cat_target)
 	return normal_data
 
+
 dataSet,trackIds,categories = splitData()
 cat_process = categorical_preprocess(dataSet)
 normal_data = normalize_preprocess(cat_process, cat_process)
