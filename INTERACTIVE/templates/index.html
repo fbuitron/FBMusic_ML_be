@@ -1,0 +1,163 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>CSC 478 Final Project</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- <script type="text/javascript" src="jQuery.TickerType/jquery.tickertype.js"></script> -->
+        <!-- Place favicon.ico in the root directory -->
+        <link rel="stylesheet" href="{{ url_for('static',filename='css/normalize.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static',filename='css/main.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static',filename='css/bootstrap.min.css') }}" >
+        <script src="{{ url_for('static',filename='js/external/jquery-3.1.1.min.js') }}"></script>
+        <script src="{{ url_for('static',filename='js/main.js') }}"></script>
+        <!-- <link rel="stylesheet" href="css/normalize.css'">
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/bootstrap.min.css" >
+        <script src="js/external/jquery-3.1.1.min.js"></script>
+        <script src="js/main.js"></script> -->
+    </head>
+    <body>
+    <div class="col-lg-1">
+    </div>
+    <div class="col-lg-10">
+        <div class="row">
+            <div class="jumbotron col-lg-offset-2 col-lg-8">
+            <h1 id="main-title">Depaul CSC478: Final Project</h1>
+            <p>This page is done by Franklin Buitron for the Final Project of CSC 478. The application is based on using machine learning in a domain that can be useful. For this the data from Spotify API is used to use and apply Machine Learning techniques to gather information from the data. Categories, Tracks and Audio Features are some of the endpoints used in this project.</p>
+            </div>
+        </div>
+        <div class="row">
+                <h1 class="page-header">DATA PROPERTIES</h2>
+                <p class="lead">In high level the data has the following properties
+        </div>
+
+        <div class="pane">
+            <div class="row">
+                <div class="col-lg-4">
+                    <h2>1290</h2>
+                    <h5>TRACKS</h5>
+                </div>
+                <div class="col-lg-4">
+                    <h2 >11</h2>
+                    <h5>CATEGORIES</h5>
+                </div>
+                <div class="row col-lg-4">
+                        <h2>13</h2>    
+                        <h5>FEATURES</h5>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">More properties...</h3>
+            </div>
+            <div class="panel-body row">
+                <div id="table-describe" class="col-lg-12">
+                    <!-- TODO: Add a table with the data from describing the raw data -->
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+                <h1 class="page-header">CLASSIFICATION</h2>
+                <p class="lead">The algorithms used are KNN and Tree
+        </div>
+        <div class="row">
+            <div class="panel panel-info col-lg-5">
+                <div class="panel-heading">
+                    <h3 class="panel-title">K Nearest Neighbors</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                    <label for="basic-url">Input a value of K to test the algorithm</label> 
+                    </div>
+                    <div class="row">
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-addon" id="basic-addon3">K</span>
+                        <input id="knnValue" value="3" min="1" max="20" type="number" class="form-control" placeholder="K nearest neighbors" aria-describedby="basic-addon3">
+                    </div>
+                    </div>
+                    <div class="row">
+                    <button  class="btn btn-primary btn-block" id="knnTest">Test</button>
+                    <div class="row">                        
+                        <p id="knnResult"> </p>    
+                    </div>
+                    </div>
+                    
+                    
+                    
+                </div>
+            </div>
+            <div class="col-lg-2">
+            </div>
+            <div class="panel panel-info col-lg-5">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Tree Classifier</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <p> Algorithm selected: Entropy</p> 
+                    </div>
+                        <div class="row">
+                        <button id="treeSubmit"  class="btn btn-primary btn-block">Test</button> 
+                    </div>
+                    <div class="row">
+                        <p id="treeResult"> ... </p>
+                    </div>
+                        
+                        
+                </div>
+            </div>
+        </div>
+        <div class="alert alert-success" role="alert">Scores were calculated with a 10 cross validation</div>
+
+
+        <div class="panel panel-info col-lg-12">
+            <div class="panel-heading">
+                <h3 class="panel-title">Classify a Song</h3>
+            </div>
+            <div class="panel-body">
+                 Input the name of a song to search and then click on <b>Classify</b> 
+                 <input id="songName" list="songSuggestions">
+                 <datalist id="songSuggestions">
+                 </datalist> 
+                 <button id="classifySong"  class="btn btn-primary btn-block"> CLASSIFY </button> 
+                 <p id="songClassResult"> </p>
+            </div>
+        </div>
+         
+       <div class="row">
+                <h1 class="page-header">Clustering</h2>
+                <p class="lead">Using K-means algorithm
+        </div>
+        <div class="panel panel-info col-lg-12">
+            <div class="panel-heading">
+                <h3 class="panel-title">K-Means</h3>
+            </div>
+            <div class="panel-body">
+                 <p>Input any number of K to generate the K-clusters and then click on <b>Cluster</b></p>
+                 <input id="clusK" type="number" value="13" name="quantity" min="2" max="20"/>
+                 <button id="clusSubmit"  class="btn btn-primary btn-block">CLUSTER</button>
+                 <div class="bottom-half">
+                    <p id="clusHom"> ...</p>    
+                    <p id="clusCom"> ...</p>
+                </div>
+                <div id="clusteringResults" class="row">
+                <!-- TODO list of clusters -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-1">
+        
+    </div>
+    <footer class="col-lg-12">
+            <div class="col-lg-offset-4 col-lg-4">
+                <p>To see the source code check the <a href="https://github.com/fbuitron/FBMusic_ML_be">Github repository</a></p>
+            </div>
+        </footer>
+    </body>
+</html>

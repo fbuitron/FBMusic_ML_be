@@ -68,10 +68,31 @@ def completePreprocessing(dataSet, targetDataSet):
 	normal_data = normalize_preprocess(cat_process, cat_target)
 	return normal_data
 
+def getDataFeatures():
+	data,trackIds,categories = splitData()
+	described = data.describe().round(2)
+	# np_arr_des = np.array(described)
+	numberOfRows = described.shape[0]
+	numberOfColumns = described.shape[1]
+	# return np_arr_des.tolist()
+	jsonResponse = {}
+	jsonList = []
+	for i in range(numberOfRows):
+		jsonObj = []
+		for m in range(numberOfColumns):			
+			jsonObj.append(described.iloc[i,m])
+		jsonList.append(jsonObj)
+	jsonResponse["columnTitles"] = np.array(described.columns).tolist()	
+	jsonResponse["rowTitles"] = np.array(described.index).tolist()
+	jsonResponse["data"] = jsonList
+	return jsonResponse
 
-dataSet,trackIds,categories = splitData()
-cat_process = categorical_preprocess(dataSet)
-normal_data = normalize_preprocess(cat_process, cat_process)
+
+# getDataFeatures()
+# dataSet,trackIds,categories = splitData()
+# print(dataSet.shape)
+# cat_process = categorical_preprocess(dataSet)
+# normal_data = normalize_preprocess(cat_process, cat_process)
 
 
 

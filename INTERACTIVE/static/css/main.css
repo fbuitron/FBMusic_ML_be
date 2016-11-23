@@ -1,0 +1,40 @@
+@font-face {
+font-family: Metropolis-bold;
+src: url("../fonts/Metropolis-Bold.otf") format("opentype");
+}
+@font-face {
+font-family: Metropolis-light;
+src: url("../fonts/Metropolis-Light.otf") format("opentype");
+}
+@font-face {
+font-family: Metropolis-medium;
+src: url("../fonts/Metropolis-Medium.otf") format("opentype");
+}
+@font-face {
+font-family: Metropolis-regular;
+src: url("../fonts/Metropolis-Regular.otf") format("opentype");
+}
+@font-face {
+font-family: Metropolis-thin;
+src: url("../fonts/Metropolis-Thin.otf") format("opentype");
+}
+
+html{
+	color:#3b465b;
+	font-family: Metropolis-regular;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
