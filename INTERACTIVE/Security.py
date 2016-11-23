@@ -3,6 +3,8 @@ import base64
 from Networking import Networking
 import json
 
+#Security API is the class in charge of the managing tokens and refresh the access token that expires every 3600 seconds.
+
 client_id = config.CLIENT_ID
 client_secret = config.CLIENT_SECRET
 refresh_token = config.REFRESH_TOKEN
@@ -34,8 +36,3 @@ class SecurityAPI():
 	def get_Authorization_Header(self):
 		return access_token
 
-
-sec = SecurityAPI()
-print(sec.shared_access_token)
-sec.renew_access_token()
-print(sec.shared_access_token)

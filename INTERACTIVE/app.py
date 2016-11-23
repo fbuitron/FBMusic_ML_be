@@ -11,6 +11,9 @@ from AudioFeatureAPI import AudioFeatureAPI
 import numpy as np
 import json
 
+# Thid onbject is in charge of the REST API with FLASK integration.
+# There are all the interfaces for the different services and the controller that reponds to it.
+
 app = Flask(__name__)
 mysql = MySQL()
 
@@ -28,7 +31,6 @@ def main():
 @app.route("/classify/knn", methods=['GET'])
 def knn():
 	k = request.args.get('k')
-	print("The value of K ",k)
 	accuracy = Classification.classify_KNN(int(k))
 	return accuracy
 
@@ -52,14 +54,12 @@ def classifySong():
 @app.route("/cluster/knnMeans", methods=['GET'])
 def knnMeans():
 	k = request.args.get('k')
-	print("KMeans: ",k)
 	jsonResponse = Clustering.cluster_Kmeans(int(k))
 	return jsonify(**jsonResponse)
 
 @app.route("/search/track", methods=['GET'])
 def searchTrack():
 	q = request.args.get('q')
-	print("query: ",q)
 	est = SearchAPI()
 	est.getSearch(q)
 	listOfSongs = est.result_list

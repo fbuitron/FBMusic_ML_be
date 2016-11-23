@@ -4,54 +4,52 @@ from SpotifyAPI import SpotifyAPI
 from Security import SecurityAPI
 import json
 
+# Class that interacts with the Search API of Spotify.
+class SearchAPI(SpotifyAPI):
 
-class AudioFeatureAPI(SpotifyAPI):
-
-    def __init__(self, tracksIds):
-        self.dict_audio_features = {}
-        self.tracksIds = tracksIds
+    def __init__(self):
+        self.result_list = []
         self.token = SecurityAPI().get_Authorization_Header()
+        self.query = ""
         self.times = 0
-
-   
+        
     def tokenFailure(self, error):
-        print("Token failed but we have retry")
         if self.times == 0:
             self.times +=1
             tokenSec = SecurityAPI()
             tokenSec.renew_access_token()
             self.token = tokenSec.shared_access_token
-            self.getAudioFeatures()
+            self.getSearch(self.query)
         else:
             self.failure(error)
 
-
-    def getAudioFeatures(self):
-
+    def getSearch(self, query):
+        self.query = query
         def success(json_str):
-            print(json_str)
             json_obj = json.loads(json_str)
-            list_of_items = json_obj['audio_features']
+            list_of_items = json_obj['tracks']['items']
             for item_index in range(len(list_of_items)):
-                audio_features_json = json_obj['audio_features'][item_index]
-                af = AudioFeatures.AudioFeatures(audio_features_json)
-                trackID = audio_features_json['id']
-                self.dict_audio_features[trackID] = af
+                resItem = {'id':list_of_items[item_index]['id'], 'name':list_of_items[item_index]['name']}
+                self.result_list.append(resItem)
     
         get = Networking.NetworkGET(self.base_url, self.getEndpoint())
         params = {}
         params["access_token"] = self.token
-        trackIDs_param = ",".join(self.tracksIds)
-        params["ids"] = trackIDs_param
+        params["type"] = 'track'
+        params["q"] = query.replace(" ", "%20")
         get.get(success, self.tokenFailure, params)
 
     def hasPaging(self):
         return False
     
+
     def getEndpoint(self):
-        return "/v1/audio-features"
+        return "/v1/search"
 
     def getRootElement(self):
         return ""
 
+    def searchInteractive(self, query):
+        self.getSearch(query)
+        return self.result_list
 

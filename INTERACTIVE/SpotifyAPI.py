@@ -1,6 +1,8 @@
 import json
 import Security
 
+# Parent class that all the Spotify APIs inherit from to model the interaction of Spotify APIS.
+
 class SpotifyAPI:
 	base_url = "https://api.spotify.com"
 	def __init__(self):
@@ -32,5 +34,3 @@ class SpotifyAPI:
 		print("error")
 		print(error.content)
 		self.stillPaging = False
-
-# All the APIs classes should inherit from SpotifyAPI that will hold most of the general logic: retry/paging/token_renewal_detection/generalError Management
